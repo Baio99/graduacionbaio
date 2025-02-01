@@ -6,7 +6,7 @@
     <title>Invitación a mi Graduación</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Dancing+Script:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
         
         * {
             margin: 0;
@@ -21,91 +21,114 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
             perspective: 1000px;
+            overflow: hidden;
+            padding: 20px;
         }
 
-        .envelope {
+        .envelope-wrapper {
             position: relative;
-            width: 650px;
-            height: 400px;
+            width: min(600px, 90vw);
+            height: min(400px, 80vh);
             cursor: pointer;
             transform-style: preserve-3d;
             transition: transform 1s;
         }
 
-        .envelope.opened {
-            transform: rotateX(180deg);
+        .envelope {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #e74c3c;
+            transform-origin: bottom;
+            transform-style: preserve-3d;
+            transition: transform 1s;
+            border-radius: 10px;
         }
 
         .envelope-front {
             position: absolute;
             width: 100%;
             height: 100%;
-            background: #e74c3c;
-            border-radius: 20px;
+            background: #c0392b;
+            transform: rotateX(0deg);
+            transform-origin: top;
+            transition: transform 1s;
             display: flex;
             justify-content: center;
             align-items: center;
-            transform-style: preserve-3d;
-            backface-visibility: hidden;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-        }
-
-        .flap {
-            position: absolute;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background: #c0392b;
-            clip-path: polygon(50% 0%, 100% 50%, 100% 100%, 0 100%, 0 50%);
-            transform-origin: top;
-            transition: transform 0.5s;
-        }
-
-        .envelope:hover .flap {
-            transform: rotateX(-180deg);
-        }
-
-        .envelope-text {
+            font-size: clamp(18px, 4vw, 24px);
             color: white;
-            font-family: 'Dancing Script', cursive;
-            font-size: 2em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
             text-align: center;
-            z-index: 1;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .envelope-front::before {
+            content: "Click para abrir";
+            position: absolute;
+            bottom: 20px;
+            font-size: clamp(14px, 3vw, 16px);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .envelope.open .envelope-front {
+            transform: rotateX(180deg);
         }
 
         .invitation-card {
             position: absolute;
-            width: 100%;
-            height: 100%;
+            width: 90%;
+            height: 90%;
             background: white;
-            padding: 40px;
+            padding: clamp(20px, 5vw, 40px);
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            transform: rotateX(180deg);
-            backface-visibility: hidden;
+            text-align: center;
+            transform: translateZ(1px);
+            opacity: 0;
+            transition: all 1s;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            left: 5%;
+            top: 5%;
+        }
+
+        .invitation-card.show {
+            opacity: 1;
+            transform: translateZ(50px);
         }
 
         .decoration {
             position: absolute;
-            width: 150px;
-            height: 150px;
+            width: min(150px, 30%);
+            height: min(150px, 30%);
             border: 2px solid gold;
             opacity: 0.1;
             border-radius: 50%;
         }
 
-        .decoration:nth-child(1) { top: -75px; left: -75px; }
-        .decoration:nth-child(2) { bottom: -75px; right: -75px; }
+        .decoration:nth-child(1) {
+            top: -75px;
+            left: -75px;
+        }
+
+        .decoration:nth-child(2) {
+            bottom: -75px;
+            right: -75px;
+        }
 
         h1 {
-            font-family: 'Dancing Script', cursive;
             color: #2c3e50;
-            font-size: 2.8em;
+            font-size: clamp(1.5em, 5vw, 2.5em);
             margin-bottom: 20px;
-            text-align: center;
         }
 
         .highlight {
@@ -114,325 +137,282 @@
         }
 
         .date {
-            font-size: 1.8em;
+            font-size: clamp(1.2em, 4vw, 1.5em);
             color: #34495e;
-            margin: 20px 0;
+            margin: 30px 0;
             padding: 15px;
-            text-align: center;
             border-top: 2px solid #eee;
             border-bottom: 2px solid #eee;
-            font-family: 'Dancing Script', cursive;
+            background: linear-gradient(45deg, transparent 5%, #f8f9fa 5%);
         }
 
         .message {
-            font-size: 1.2em;
+            font-size: clamp(1em, 3vw, 1.2em);
             line-height: 1.6;
             color: #7f8c8d;
-            margin-bottom: 20px;
-            text-align: center;
+            margin-bottom: 30px;
         }
 
         .countdown {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin: 20px 0;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+            gap: clamp(10px, 2vw, 20px);
+            margin: 30px 0;
+            padding: 0 clamp(10px, 2vw, 20px);
         }
 
         .countdown-item {
-            background: linear-gradient(145deg, #e74c3c, #c0392b);
+            background: #2c3e50;
             color: white;
-            padding: 12px;
+            padding: clamp(10px, 2vw, 15px);
             border-radius: 10px;
-            min-width: 80px;
             text-align: center;
-            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+            transform: scale(1);
+            transition: transform 0.3s;
+        }
+
+        .countdown-item:hover {
+            transform: scale(1.1);
         }
 
         .countdown-item span {
             display: block;
-            font-size: 1.8em;
+            font-size: clamp(1.2em, 4vw, 1.8em);
             font-weight: bold;
         }
 
         .countdown-item p {
-            font-size: 0.8em;
+            font-size: clamp(0.8em, 2vw, 1em);
             margin-top: 5px;
         }
 
-        .time-status {
-            text-align: center;
-            color: #e74c3c;
-            font-size: 1.2em;
-            margin: 10px 0;
-            font-weight: bold;
-        }
-
         .rsvp-button {
-            display: block;
-            margin: 20px auto;
-            background: linear-gradient(145deg, #e74c3c, #c0392b);
+            background: #e74c3c;
             color: white;
             border: none;
-            padding: 15px 40px;
-            font-size: 1.2em;
+            padding: clamp(10px, 3vw, 15px) clamp(20px, 5vw, 40px);
+            font-size: clamp(1em, 3vw, 1.2em);
             border-radius: 30px;
             cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-            font-family: 'Playfair Display', serif;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            margin-top: 20px;
         }
 
         .rsvp-button:hover {
             transform: translateY(-3px);
-            box-shadow: 0 5px 20px rgba(231, 76, 60, 0.4);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
         }
 
-        .modal {
-            display: none;
+        .confirmation-modal {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
             background: white;
-            padding: 30px;
+            padding: clamp(20px, 5vw, 30px);
             border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             text-align: center;
-            max-width: 400px;
-            width: 90%;
-            position: relative;
+            transition: transform 0.3s;
+            z-index: 1000;
+            width: min(90%, 400px);
         }
 
-        .modal-close {
-            position: absolute;
-            right: 15px;
-            top: 10px;
-            font-size: 24px;
-            cursor: pointer;
-            color: #7f8c8d;
+        .confirmation-modal.show {
+            transform: translate(-50%, -50%) scale(1);
         }
 
         .confetti {
             position: fixed;
-            pointer-events: none;
+            width: 10px;
+            height: 10px;
+            background: #e74c3c;
+            position: absolute;
+            animation: confetti 5s ease-in-out infinite;
         }
 
-        @keyframes floating {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        @keyframes confetti {
+            0% { transform: translateY(0) rotateZ(0deg); opacity: 1; }
+            100% { transform: translateY(1000px) rotateZ(720deg); opacity: 0; }
         }
 
-        .floating {
-            animation: floating 3s ease-in-out infinite;
-        }
-
-        @media (max-width: 768px) {
-            .envelope {
-                width: 100%;
-                height: auto;
-                min-height: 400px;
+        @media (max-height: 600px) {
+            .envelope-wrapper {
+                height: min(500px, 95vh);
+                margin: 40px 0;
             }
 
             .invitation-card {
-                padding: 20px;
+                height: 95%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .countdown {
+                grid-template-columns: repeat(2, 1fr);
             }
 
-            h1 {
-                font-size: 2em;
+            .envelope-front::before {
+                bottom: 10px;
             }
 
-            .date {
-                font-size: 1.5em;
+            .decoration {
+                display: none;
             }
+        }
+
+        /* Estilos para el scrollbar */
+        .invitation-card::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .invitation-card::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .invitation-card::-webkit-scrollbar-thumb {
+            background: #e74c3c;
+            border-radius: 4px;
+        }
+
+        .invitation-card::-webkit-scrollbar-thumb:hover {
+            background: #c0392b;
         }
     </style>
 </head>
 <body>
-    <div class="envelope">
-        <div class="envelope-front">
-            <div class="flap"></div>
-            <div class="envelope-text">
-                Toca para abrir<br>
-                <span style="font-size: 0.8em">↓</span>
+    <div class="envelope-wrapper">
+        <div class="envelope">
+            <div class="envelope-front">
+                ¡Has recibido una invitación especial!
             </div>
-        </div>
-        
-        <div class="invitation-card">
-            <div class="decoration"></div>
-            <div class="decoration"></div>
-            
-            <h1>¡Te invito a mi <span class="highlight">Graduación</span>!</h1>
-            
-            <p class="message">
-                Después de 1 década, 2 eras de hielo, y antes de que se acabe el mundo...<br>
-                ¡Por fin me gradúo! Y quiero compartir este momento especial contigo.
-            </p>
+            <div class="invitation-card">
+                <div class="decoration"></div>
+                <div class="decoration"></div>
+                
+                <h1>¡Te invito a mi <span class="highlight">Graduación</span>!</h1>
+                
+                <p class="message">
+                    Después de 1 década, 2 eras de hielo, y antes de que se acabe el mundo...
+                    ¡Por fin me gradúo! Y quiero compartir este momento especial contigo.
+                </p>
 
-            <div class="date floating">
-                Viernes 7 de marzo del 2024
+                <div class="date">
+                    Viernes 7 de marzo del 2024
+                </div>
+
+                <p class="message">
+                    Se avisa con anticipación de un mes, para que puedas organizar tus actividades.
+                    ¡Te espero, no faltes!
+                </p>
+
+                <div class="countdown">
+                    <div class="countdown-item">
+                        <span id="days">00</span>
+                        <p>Días</p>
+                    </div>
+                    <div class="countdown-item">
+                        <span id="hours">00</span>
+                        <p>Horas</p>
+                    </div>
+                    <div class="countdown-item">
+                        <span id="minutes">00</span>
+                        <p>Minutos</p>
+                    </div>
+                    <div class="countdown-item">
+                        <span id="seconds">00</span>
+                        <p>Segundos</p>
+                    </div>
+                </div>
+
+                <button class="rsvp-button">Confirmar Asistencia</button>
             </div>
-
-            <div class="time-status" id="timeStatus"></div>
-
-            <div class="countdown">
-                <div class="countdown-item">
-                    <span id="days">00</span>
-                    <p>Días</p>
-                </div>
-                <div class="countdown-item">
-                    <span id="hours">00</span>
-                    <p>Horas</p>
-                </div>
-                <div class="countdown-item">
-                    <span id="minutes">00</span>
-                    <p>Minutos</p>
-                </div>
-                <div class="countdown-item">
-                    <span id="seconds">00</span>
-                    <p>Segundos</p>
-                </div>
-            </div>
-
-            <p class="message">
-                Se avisa con anticipación, para que puedas organizar tus actividades.<br>
-                ¡Te espero, no faltes!
-            </p>
-
-            <button class="rsvp-button" onclick="showConfirmModal()">Confirmar Asistencia</button>
         </div>
     </div>
 
-    <!-- Modal de confirmación -->
-    <div class="modal" id="confirmModal">
-        <div class="modal-content">
-            <span class="modal-close" onclick="closeModal()">&times;</span>
-            <h2 style="color: #2c3e50; margin-bottom: 20px;">¡Gracias por confirmar!</h2>
-            <p style="color: #7f8c8d; margin-bottom: 20px;">Tu asistencia ha sido confirmada. ¡Te esperamos con mucha alegría! 🎓✨</p>
-            <button class="rsvp-button" onclick="closeModal()">Cerrar</button>
-        </div>
+    <div class="confirmation-modal">
+        <h2>¡Gracias por confirmar!</h2>
+        <p>Nos vemos en la celebración 🎓✨</p>
     </div>
 
     <script>
-        // Manejar la apertura del sobre
-        document.querySelector('.envelope').addEventListener('click', function() {
-            this.classList.toggle('opened');
+        // Animación del sobre
+        const envelope = document.querySelector('.envelope');
+        const card = document.querySelector('.invitation-card');
+        let isOpen = false;
+
+        envelope.addEventListener('click', () => {
+            if (!isOpen) {
+                envelope.classList.add('open');
+                setTimeout(() => {
+                    card.classList.add('show');
+                }, 500);
+                isOpen = true;
+            }
         });
 
-         // Función para mostrar el modal de confirmación
-    function showConfirmModal() {
-        document.getElementById('confirmModal').style.display = 'flex';
-        createConfetti();
-        // Guardar en localStorage que ya confirmó
-        localStorage.setItem('confirmed', 'true');
-        // Cambiar el texto del botón
-        document.querySelector('.rsvp-button').textContent = 'Asistencia Confirmada';
-        document.querySelector('.rsvp-button').disabled = true;
-    }
+        // Contador regresivo
+        const countDownDate = new Date("March 7, 2024 00:00:00").getTime();
 
-
-      // Verificar si ya confirmó al cargar la página
-      window.onload = function() {
-        if (localStorage.getItem('confirmed')) {
-            document.querySelector('.rsvp-button').textContent = 'Asistencia Confirmada';
-            document.querySelector('.rsvp-button').disabled = true;
-        }
-    };
-
-          // Función para cerrar el modal
-    function closeModal() {
-        document.getElementById('confirmModal').style.display = 'none';
-    }
-
-
-        // Contador regresivo y estado del tiempo
-        
         function updateCountdown() {
-        // Fecha actual
-        const now = new Date().getTime();
-        
-        // Fecha del evento (7 de marzo de 2024)
-        const eventDate = new Date("2024-03-07T00:00:00").getTime();
-        
-        // Diferencia de tiempo
-        const timeLeft = eventDate - now;
-        
-        // Cálculos de tiempo
-        const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+            const now = new Date().getTime();
+            const distance = countDownDate - now;
 
-        // Actualizar los elementos en el DOM
-        document.getElementById('days').textContent = String(days).padStart(2, '0');
-        document.getElementById('hours').textContent = String(hours).padStart(2, '0');
-        document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
-        document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+            const days = Math.max(Math.floor(distance / (1000 * 60 * 60 * 24)), 0);
+            const hours = Math.max(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)), 0);
+            const minutes = Math.max(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)), 0);
+            const seconds = Math.max(Math.floor((distance % (1000 * 60)) / 1000), 0);
 
-        // Actualizar el mensaje de estado
-        const timeStatus = document.getElementById('timeStatus');
-        
-        if (timeLeft < 0) {
-            // Si el evento ya pasó
-            timeStatus.textContent = "¡El evento ya ha pasado!";
-            document.querySelector('.rsvp-button').style.display = 'none';
-            
-            // Mostrar todos los contadores en 00
-            document.getElementById('days').textContent = '00';
-            document.getElementById('hours').textContent = '00';
-            document.getElementById('minutes').textContent = '00';
-            document.getElementById('seconds').textContent = '00';
-        } else {
-            // Si el evento aún no ha pasado
-            timeStatus.textContent = `¡Faltan ${days} días, ${hours} horas, ${minutes} minutos y ${seconds} segundos!`;
+            document.getElementById("days").textContent = String(days).padStart(2, '0');
+            document.getElementById("hours").textContent = String(hours).padStart(2, '0');
+            document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
+            document.getElementById("seconds").textContent = String(seconds).padStart(2, '0');
+
+            if (distance < 0) {
+                clearInterval(countdownInterval);
+            }
         }
-    }
 
-        setInterval(updateCountdown, 1000);
+        const countdownInterval = setInterval(updateCountdown, 1000);
         updateCountdown();
 
-        // Función para crear confeti
+        // Confirmación y efectos
+        const rsvpButton = document.querySelector('.rsvp-button');
+        const modal = document.querySelector('.confirmation-modal');
+
         function createConfetti() {
-            const colors = ['#e74c3c', '#f1c40f', '#2ecc71', '#3498db'];
-            
-            for(let i = 0; i < 50; i++) {
+            const colors = ['#e74c3c', '#3498db', '#2ecc71', '#f1c40f'];
+            for (let i = 0; i < 50; i++) {
                 const confetti = document.createElement('div');
                 confetti.className = 'confetti';
-                confetti.style.left = Math.random() * 100 + 'vw';
-                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.width = '10px';
-                confetti.style.height = '10px';
-                confetti.style.position = 'fixed';
-                confetti.style.top = '-10px';
+                confetti.style.left = Math.random() * window.innerWidth + 'px';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
                 document.body.appendChild(confetti);
 
-                const animation = confetti.animate([
-                    { transform: 'translate3d(0, 0, 0) rotate(0deg)', opacity: 1 },
-                    { transform: `translate3d(${Math.random() * 200 - 100}px, ${window.innerHeight}px, 0) rotate(${Math.random() * 360}deg)`, opacity: 0 }
-                ], {
-                    duration: 3000,
-                    easing: 'cubic-bezier(0, .9, .57, 1)',
-                    delay: Math.random() * 2000
-                });
-
-                animation.onfinish = () => confetti.remove();
+                setTimeout(() => confetti.remove(), 5000);
             }
         }
 
-        // Cerrar modal al hacer clic fuera
-        window.onclick = function(event) {
-            const modal = document.getElementById('confirmModal');
-            if (event.target == modal) {
-                closeModal();
-            }
+        rsvpButton.addEventListener('click', () => {
+            modal.classList.add('show');
+            createConfetti();
+            setTimeout(() => {
+                modal.classList.remove('show');
+            }, 3000);
+        });
+
+        // Ajuste de altura en dispositivos móviles
+        function adjustHeight() {
+            const vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
         }
+
+        window.addEventListener('resize', adjustHeight);
+        adjustHeight();
     </script>
 </body>
 </html>
