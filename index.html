@@ -263,7 +263,6 @@
             }
         }
 
-        /* Estilos para el scrollbar */
         .invitation-card::-webkit-scrollbar {
             width: 8px;
         }
@@ -301,11 +300,12 @@
                 </p>
 
                 <div class="date">
-                    Viernes 7 de marzo del 2024
+                    Viernes 7 de marzo del 2025
+                    Lugar: <span class="highlight">Universidad ESPE</span>
                 </div>
 
                 <p class="message">
-                    Se avisa con anticipación de un mes, para que puedas organizar tus actividades.
+                    Se avisa con anticipación, para que puedas organizar tus actividades.
                     ¡Te espero, no faltes!
                 </p>
 
@@ -354,12 +354,13 @@
             }
         });
 
-        // Contador regresivo
-        const countDownDate = new Date("March 7, 2024 00:00:00").getTime();
+        // Contador regresivo actualizado para Ecuador (UTC-5)
+        const eventDate = new Date('2025-03-07T00:00:00-05:00').getTime();
 
         function updateCountdown() {
             const now = new Date().getTime();
-            const distance = countDownDate - now;
+            const timeZoneOffset = -5 * 60 * 60 * 1000; // UTC-5 en milisegundos
+            const distance = eventDate - now;
 
             const days = Math.max(Math.floor(distance / (1000 * 60 * 60 * 24)), 0);
             const hours = Math.max(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)), 0);
@@ -373,6 +374,10 @@
 
             if (distance < 0) {
                 clearInterval(countdownInterval);
+                document.getElementById("days").textContent = '00';
+                document.getElementById("hours").textContent = '00';
+                document.getElementById("minutes").textContent = '00';
+                document.getElementById("seconds").textContent = '00';
             }
         }
 
