@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invitación a mi Graduación</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Playfair Display', serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .invitation-card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .decoration {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            border: 2px solid gold;
+            opacity: 0.1;
+            border-radius: 50%;
+            transition: all 0.5s ease;
+        }
+
+        .invitation-card:hover .decoration {
+            transform: scale(1.2) rotate(45deg);
+            opacity: 0.2;
+        }
+
+        .decoration:nth-child(1) {
+            top: -75px;
+            left: -75px;
+        }
+
+        .decoration:nth-child(2) {
+            bottom: -75px;
+            right: -75px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            opacity: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .highlight {
+            color: #e74c3c;
+            font-style: italic;
+            display: inline-block;
+            position: relative;
+        }
+
+        .highlight::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #e74c3c;
+            transform: scaleX(0);
+            transition: transform 0.5s ease;
+            transform-origin: right;
+        }
+
+        .invitation-card:hover .highlight::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .date {
+            font-size: 1.5em;
+            color: #34495e;
+            margin: 30px 0;
+            padding: 15px;
+            border-top: 2px solid #eee;
+            border-bottom: 2px solid #eee;
+            opacity: 0;
+            position: relative;
+            background: linear-gradient(45deg, transparent 5%, #f8f9fa 5%);
+            transition: all 0.3s ease;
+        }
+
+        .date:hover {
+            transform: scale(1.05);
+            background: linear-gradient(45deg, transparent 5%, #fff5f5 5%);
+        }
+
+        .message {
+            font-size: 1.2em;
+            line-height: 1.6;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            opacity: 0;
+            transform: translateX(-50px);
+        }
+
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+            opacity: 0;
+        }
+
+        .countdown-item {
+            background: #2c3e50;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            min-width: 80px;
+            transform: scale(1);
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .countdown-item:hover {
+            transform: scale(1.1);
+            background: #e74c3c;
+        }
+
+        .countdown-item span {
+            display: block;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .countdown-item p {
+            font-size: 0.8em;
+            margin-top: 5px;
+        }
+
+        .rsvp-button {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .rsvp-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                120deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .rsvp-button:hover::before {
+            left: 100%;
+        }
+
+        .rsvp-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+            background: #c0392b;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-10px) rotate(2deg); }
+            75% { transform: translateY(10px) rotate(-2deg); }
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Partículas de celebración */
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="invitation-card">
+        <div class="decoration"></div>
+        <div class="decoration"></div>
+        
+        <h1>¡Te invito a mi <span class="highlight">Graduación</span>!</h1>
+        
+        <p class="message">
+            Después de 1 década, 2 eras de hielo, y antes de que se acabe el mundo...
+            ¡Por fin me gradúo! Y quiero compartir este momento especial contigo.
+        </p>
+
+        <div class="date floating">
+            Viernes 7 de marzo del 2024
+        </div>
+
+        <p class="message">
+            Se avisa con anticipación de un mes, para que puedas organizar tus actividades.
+            ¡Te espero, no faltes!
+        </p>
+
+        <div class="countdown">
+            <div class="countdown-item">
+                <span id="days">00</span>
+                <p>Días</p>
+            </div>
+            <div class="countdown-item">
+                <span id="hours">00</span>
+                <p>Horas</p>
+            </div>
+            <div class="countdown-item">
+                <span id="minutes">00</span>
+                <p>Minutos</p>
+            </div>
+            <div class="countdown-item">
+                <span id="seconds">00</span>
+                <p>Segundos</p>
+            </div>
+        </div>
+
+        <button class="rsvp-button">Confirmar Asistencia</button>
+    </div>
+
+    <script>
+        // Animaciones mejoradas con GSAP
+        const tl = gsap.timeline();
+
+        tl.to(".invitation-card", {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            ease: "power2.out"
+        })
+        .from(".decoration", {
+            scale: 0,
+            rotation: 180,
+            duration: 1,
+            stagger: 0.2,
+            ease: "back.out(1.7)"
+        })
+        .to("h1", {
+            opacity: 1,
+            duration: 1,
+            y: 0,
+            ease: "power2.out"
+        })
+        .from(".highlight", {
+            scale: 1.5,
+            opacity: 0,
+            duration: 0.5,
+            ease: "power2.out"
+        })
+        .to(".message", {
+            opacity: 1,
+            x: 0,
+            duration: 0.8,
+            stagger: 0.3,
+            ease: "power2.out"
+        })
+        .to(".date", {
+            opacity: 1,
+            duration: 1,
+            ease: "power2.out"
+        })
+        .to(".countdown", {
+            opacity: 1,
+            duration: 1,
+            ease: "power2.out"
+        })
+        .from(".countdown-item", {
+            scale: 0,
+            rotation: 15,
+            duration: 0.8,
+            stagger: 0.2,
+            ease: "back.out(1.7)"
+        })
+        .to(".rsvp-button", {
+            opacity: 1,
+            duration: 1,
+            ease: "power2.out"
+        });
+
+        // Función para crear partículas de celebración
+        function createParticle(x, y) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.innerHTML = ['✨', '🎓', '🎉'][Math.floor(Math.random() * 3)];
+            document.body.appendChild(particle);
+
+            const animation = particle.animate([
+                {
+                    transform: `translate(${x}px, ${y}px) scale(0)`,
+                    opacity: 1
+                },
+                {
+                    transform: `translate(${x + (Math.random() - 0.5) * 200}px, ${y - 200}px) scale(1)`,
+                    opacity: 0
+                }
+            ], {
+                duration: 1000,
+                easing: 'cubic-bezier(0, .9, .57, 1)',
+                delay: Math.random() * 100
+            });
+
+            animation.onfinish = () => particle.remove();
+        }
+
+        // Contador regresivo mejorado
+        const countDownDate = new Date("March 7, 2024 00:00:00").getTime();
+
+        const updateCountdown = () => {
+            const now = new Date().getTime();
+            const distance = countDownDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            gsap.to("#days", {
+                innerHTML: String(days).padStart(2, '0'),
+                duration: 0.5,
+                snap: { innerHTML: 1 }
+            });
+            gsap.to("#hours", {
+                innerHTML: String(hours).padStart(2, '0'),
+                duration: 0.5,
+                snap: { innerHTML: 1 }
+            });
+            gsap.to("#minutes", {
+                innerHTML: String(minutes).padStart(2, '0'),
+                duration: 0.5,
+                snap: { innerHTML: 1 }
+            });
+            gsap.to("#seconds", {
+                innerHTML: String(seconds).padStart(2, '0'),
+                duration: 0.5,
+                snap: { innerHTML: 1 }
+            });
+        };
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Efecto de partículas en el botón
+        document.querySelector('.rsvp-button').addEventListener('click', function(e) {
+            const rect = this.getBoundingClientRect();
+            for(let i = 0; i < 20; i++) {
+                createParticle(rect.left + rect.width / 2, rect.top + rect.height / 2);
+            }
+            alert('¡Gracias por confirmar tu asistencia! Te esperamos con mucha alegría.');
+        });
+    </script>
+</body>
+</html>
