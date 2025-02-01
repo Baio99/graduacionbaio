@@ -6,7 +6,7 @@
     <title>Invitación a mi Graduación</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Dancing+Script:wght@400;700&display=swap');
         
         * {
             margin: 0;
@@ -16,27 +16,76 @@
 
         body {
             font-family: 'Playfair Display', serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: #f0f2f5;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
-            overflow-x: hidden;
+            perspective: 1000px;
+        }
+
+        .envelope {
+            position: relative;
+            width: 650px;
+            height: 400px;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 1s;
+        }
+
+        .envelope.opened {
+            transform: rotateX(180deg);
+        }
+
+        .envelope-front {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #e74c3c;
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform-style: preserve-3d;
+            backface-visibility: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .flap {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: #c0392b;
+            clip-path: polygon(50% 0%, 100% 50%, 100% 100%, 0 100%, 0 50%);
+            transform-origin: top;
+            transition: transform 0.5s;
+        }
+
+        .envelope:hover .flap {
+            transform: rotateX(-180deg);
+        }
+
+        .envelope-text {
+            color: white;
+            font-family: 'Dancing Script', cursive;
+            font-size: 2em;
+            text-align: center;
+            z-index: 1;
         }
 
         .invitation-card {
+            position: absolute;
+            width: 100%;
+            height: 100%;
             background: white;
             padding: 40px;
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-            width: 100%;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            opacity: 0;
-            transform: translateY(50px);
+            transform: rotateX(180deg);
+            backface-visibility: hidden;
+            overflow-y: auto;
         }
 
         .decoration {
@@ -46,111 +95,64 @@
             border: 2px solid gold;
             opacity: 0.1;
             border-radius: 50%;
-            transition: all 0.5s ease;
         }
 
-        .invitation-card:hover .decoration {
-            transform: scale(1.2) rotate(45deg);
-            opacity: 0.2;
-        }
-
-        .decoration:nth-child(1) {
-            top: -75px;
-            left: -75px;
-        }
-
-        .decoration:nth-child(2) {
-            bottom: -75px;
-            right: -75px;
-        }
+        .decoration:nth-child(1) { top: -75px; left: -75px; }
+        .decoration:nth-child(2) { bottom: -75px; right: -75px; }
 
         h1 {
+            font-family: 'Dancing Script', cursive;
             color: #2c3e50;
-            font-size: 2.5em;
+            font-size: 2.8em;
             margin-bottom: 20px;
-            opacity: 0;
-            position: relative;
-            overflow: hidden;
+            text-align: center;
         }
 
         .highlight {
             color: #e74c3c;
             font-style: italic;
-            display: inline-block;
-            position: relative;
-        }
-
-        .highlight::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: #e74c3c;
-            transform: scaleX(0);
-            transition: transform 0.5s ease;
-            transform-origin: right;
-        }
-
-        .invitation-card:hover .highlight::after {
-            transform: scaleX(1);
-            transform-origin: left;
         }
 
         .date {
-            font-size: 1.5em;
+            font-size: 1.8em;
             color: #34495e;
-            margin: 30px 0;
+            margin: 20px 0;
             padding: 15px;
+            text-align: center;
             border-top: 2px solid #eee;
             border-bottom: 2px solid #eee;
-            opacity: 0;
-            position: relative;
-            background: linear-gradient(45deg, transparent 5%, #f8f9fa 5%);
-            transition: all 0.3s ease;
-        }
-
-        .date:hover {
-            transform: scale(1.05);
-            background: linear-gradient(45deg, transparent 5%, #fff5f5 5%);
+            font-family: 'Dancing Script', cursive;
         }
 
         .message {
             font-size: 1.2em;
             line-height: 1.6;
             color: #7f8c8d;
-            margin-bottom: 30px;
-            opacity: 0;
-            transform: translateX(-50px);
+            margin-bottom: 20px;
+            text-align: center;
         }
 
         .countdown {
             display: flex;
             justify-content: center;
-            gap: 20px;
-            margin: 30px 0;
-            opacity: 0;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
         }
 
         .countdown-item {
-            background: #2c3e50;
+            background: linear-gradient(145deg, #e74c3c, #c0392b);
             color: white;
-            padding: 15px;
+            padding: 12px;
             border-radius: 10px;
             min-width: 80px;
-            transform: scale(1);
-            transition: transform 0.3s ease, background-color 0.3s ease;
-        }
-
-        .countdown-item:hover {
-            transform: scale(1.1);
-            background: #e74c3c;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
         }
 
         .countdown-item span {
             display: block;
-            font-size: 1.5em;
+            font-size: 1.8em;
             font-weight: bold;
         }
 
@@ -159,277 +161,278 @@
             margin-top: 5px;
         }
 
+        .time-status {
+            text-align: center;
+            color: #e74c3c;
+            font-size: 1.2em;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
         .rsvp-button {
-            background: #e74c3c;
+            display: block;
+            margin: 20px auto;
+            background: linear-gradient(145deg, #e74c3c, #c0392b);
             color: white;
             border: none;
             padding: 15px 40px;
             font-size: 1.2em;
             border-radius: 30px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            opacity: 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .rsvp-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                120deg,
-                transparent,
-                rgba(255, 255, 255, 0.3),
-                transparent
-            );
-            transition: 0.5s;
-        }
-
-        .rsvp-button:hover::before {
-            left: 100%;
+            transition: transform 0.3s, box-shadow 0.3s;
+            font-family: 'Playfair Display', serif;
         }
 
         .rsvp-button:hover {
             transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
-            background: #c0392b;
+            box-shadow: 0 5px 20px rgba(231, 76, 60, 0.4);
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            25% { transform: translateY(-10px) rotate(2deg); }
-            75% { transform: translateY(10px) rotate(-2deg); }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            right: 15px;
+            top: 10px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+
+        .confetti {
+            position: fixed;
+            pointer-events: none;
+        }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
         .floating {
-            animation: float 6s ease-in-out infinite;
+            animation: floating 3s ease-in-out infinite;
         }
 
-        /* Partículas de celebración */
-        .particle {
-            position: absolute;
-            pointer-events: none;
-            opacity: 0;
+        @media (max-width: 768px) {
+            .envelope {
+                width: 100%;
+                height: auto;
+                min-height: 400px;
+            }
+
+            .invitation-card {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .date {
+                font-size: 1.5em;
+            }
         }
-
-
-        .countdown {
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-        margin: 30px 0;
-        opacity: 0;
-    }
-
-    .countdown-item {
-        background: #2c3e50;
-        color: white;
-        padding: 15px;
-        border-radius: 10px;
-        min-width: 80px;
-        text-align: center;
-    }
-
-    .countdown-item span {
-        display: block;
-        font-size: 2.5em;
-        font-weight: bold;
-        color: #e74c3c;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .countdown-item span.negative {
-        color: #e74c3c;
-    }
-
-    .countdown-item p {
-        font-size: 0.9em;
-        margin-top: 5px;
-        color: #fff;
-    }
-
-    .time-passed {
-        color: #e74c3c;
-        font-weight: bold;
-    }
     </style>
 </head>
 <body>
-    <div class="invitation-card">
-        <div class="decoration"></div>
-        <div class="decoration"></div>
-        
-        <h1>¡Te invito a mi <span class="highlight">Graduación</span>!</h1>
-        
-        <p class="message">
-            Después de 1 década, 2 eras de hielo, y antes de que se acabe el mundo...
-            ¡Por fin me gradúo! Y quiero compartir este momento especial contigo.
-        </p>
-
-        <div class="date floating">
-            Viernes 7 de marzo del 2024
-        </div>
-
-        <p class="message">
-            Se avisa con anticipación de un mes, para que puedas organizar tus actividades.
-            ¡Te espero, no faltes!
-        </p>
-
-        <div class="countdown">
-            <div class="countdown-item">
-                <span id="days">00</span>
-                <p>Días</p>
-            </div>
-            <div class="countdown-item">
-                <span id="hours">00</span>
-                <p>Horas</p>
-            </div>
-            <div class="countdown-item">
-                <span id="minutes">00</span>
-                <p>Minutos</p>
-            </div>
-            <div class="countdown-item">
-                <span id="seconds">00</span>
-                <p>Segundos</p>
+    <div class="envelope">
+        <div class="envelope-front">
+            <div class="flap"></div>
+            <div class="envelope-text">
+                Toca para abrir<br>
+                <span style="font-size: 0.8em">↓</span>
             </div>
         </div>
+        
+        <div class="invitation-card">
+            <div class="decoration"></div>
+            <div class="decoration"></div>
+            
+            <h1>¡Te invito a mi <span class="highlight">Graduación</span>!</h1>
+            
+            <p class="message">
+                Después de 1 década, 2 eras de hielo, y antes de que se acabe el mundo...<br>
+                ¡Por fin me gradúo! Y quiero compartir este momento especial contigo.
+            </p>
 
-        <button class="rsvp-button">Confirmar Asistencia</button>
+            <div class="date floating">
+                Viernes 7 de marzo del 2024
+            </div>
+
+            <div class="time-status" id="timeStatus"></div>
+
+            <div class="countdown">
+                <div class="countdown-item">
+                    <span id="days">00</span>
+                    <p>Días</p>
+                </div>
+                <div class="countdown-item">
+                    <span id="hours">00</span>
+                    <p>Horas</p>
+                </div>
+                <div class="countdown-item">
+                    <span id="minutes">00</span>
+                    <p>Minutos</p>
+                </div>
+                <div class="countdown-item">
+                    <span id="seconds">00</span>
+                    <p>Segundos</p>
+                </div>
+            </div>
+
+            <p class="message">
+                Se avisa con anticipación, para que puedas organizar tus actividades.<br>
+                ¡Te espero, no faltes!
+            </p>
+
+            <button class="rsvp-button" onclick="showConfirmModal()">Confirmar Asistencia</button>
+        </div>
+    </div>
+
+    <!-- Modal de confirmación -->
+    <div class="modal" id="confirmModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <h2 style="color: #2c3e50; margin-bottom: 20px;">¡Gracias por confirmar!</h2>
+            <p style="color: #7f8c8d; margin-bottom: 20px;">Tu asistencia ha sido confirmada. ¡Te esperamos con mucha alegría! 🎓✨</p>
+            <button class="rsvp-button" onclick="closeModal()">Cerrar</button>
+        </div>
     </div>
 
     <script>
-        // Animaciones mejoradas con GSAP
-        const tl = gsap.timeline();
-
-        tl.to(".invitation-card", {
-            opacity: 1,
-            y: 0,
-            duration: 1,
-            ease: "power2.out"
-        })
-        .from(".decoration", {
-            scale: 0,
-            rotation: 180,
-            duration: 1,
-            stagger: 0.2,
-            ease: "back.out(1.7)"
-        })
-        .to("h1", {
-            opacity: 1,
-            duration: 1,
-            y: 0,
-            ease: "power2.out"
-        })
-        .from(".highlight", {
-            scale: 1.5,
-            opacity: 0,
-            duration: 0.5,
-            ease: "power2.out"
-        })
-        .to(".message", {
-            opacity: 1,
-            x: 0,
-            duration: 0.8,
-            stagger: 0.3,
-            ease: "power2.out"
-        })
-        .to(".date", {
-            opacity: 1,
-            duration: 1,
-            ease: "power2.out"
-        })
-        .to(".countdown", {
-            opacity: 1,
-            duration: 1,
-            ease: "power2.out"
-        })
-        .from(".countdown-item", {
-            scale: 0,
-            rotation: 15,
-            duration: 0.8,
-            stagger: 0.2,
-            ease: "back.out(1.7)"
-        })
-        .to(".rsvp-button", {
-            opacity: 1,
-            duration: 1,
-            ease: "power2.out"
+        // Manejar la apertura del sobre
+        document.querySelector('.envelope').addEventListener('click', function() {
+            this.classList.toggle('opened');
         });
 
-        // Función para crear partículas de celebración
-        function createParticle(x, y) {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.innerHTML = ['✨', '🎓', '🎉'][Math.floor(Math.random() * 3)];
-            document.body.appendChild(particle);
+         // Función para mostrar el modal de confirmación
+    function showConfirmModal() {
+        document.getElementById('confirmModal').style.display = 'flex';
+        createConfetti();
+        // Guardar en localStorage que ya confirmó
+        localStorage.setItem('confirmed', 'true');
+        // Cambiar el texto del botón
+        document.querySelector('.rsvp-button').textContent = 'Asistencia Confirmada';
+        document.querySelector('.rsvp-button').disabled = true;
+    }
 
-            const animation = particle.animate([
-                {
-                    transform: `translate(${x}px, ${y}px) scale(0)`,
-                    opacity: 1
-                },
-                {
-                    transform: `translate(${x + (Math.random() - 0.5) * 200}px, ${y - 200}px) scale(1)`,
-                    opacity: 0
-                }
-            ], {
-                duration: 1000,
-                easing: 'cubic-bezier(0, .9, .57, 1)',
-                delay: Math.random() * 100
-            });
 
-            animation.onfinish = () => particle.remove();
+      // Verificar si ya confirmó al cargar la página
+      window.onload = function() {
+        if (localStorage.getItem('confirmed')) {
+            document.querySelector('.rsvp-button').textContent = 'Asistencia Confirmada';
+            document.querySelector('.rsvp-button').disabled = true;
         }
+    };
 
-        // Contador regresivo mejorado
-        const countDownDate = new Date("March 7, 2024 00:00:00").getTime();
+          // Función para cerrar el modal
+    function closeModal() {
+        document.getElementById('confirmModal').style.display = 'none';
+    }
 
-        const updateCountdown = () => {
-            const now = new Date().getTime();
-            const distance = countDownDate - now;
 
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        // Contador regresivo y estado del tiempo
+        
+        function updateCountdown() {
+        // Fecha actual
+        const now = new Date().getTime();
+        
+        // Fecha del evento (7 de marzo de 2024)
+        const eventDate = new Date("2024-03-07T00:00:00").getTime();
+        
+        // Diferencia de tiempo
+        const timeLeft = eventDate - now;
+        
+        // Cálculos de tiempo
+        const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
 
-            gsap.to("#days", {
-                innerHTML: String(days).padStart(2, '0'),
-                duration: 0.5,
-                snap: { innerHTML: 1 }
-            });
-            gsap.to("#hours", {
-                innerHTML: String(hours).padStart(2, '0'),
-                duration: 0.5,
-                snap: { innerHTML: 1 }
-            });
-            gsap.to("#minutes", {
-                innerHTML: String(minutes).padStart(2, '0'),
-                duration: 0.5,
-                snap: { innerHTML: 1 }
-            });
-            gsap.to("#seconds", {
-                innerHTML: String(seconds).padStart(2, '0'),
-                duration: 0.5,
-                snap: { innerHTML: 1 }
-            });
-        };
+        // Actualizar los elementos en el DOM
+        document.getElementById('days').textContent = String(days).padStart(2, '0');
+        document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+        document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+        document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+
+        // Actualizar el mensaje de estado
+        const timeStatus = document.getElementById('timeStatus');
+        
+        if (timeLeft < 0) {
+            // Si el evento ya pasó
+            timeStatus.textContent = "¡El evento ya ha pasado!";
+            document.querySelector('.rsvp-button').style.display = 'none';
+            
+            // Mostrar todos los contadores en 00
+            document.getElementById('days').textContent = '00';
+            document.getElementById('hours').textContent = '00';
+            document.getElementById('minutes').textContent = '00';
+            document.getElementById('seconds').textContent = '00';
+        } else {
+            // Si el evento aún no ha pasado
+            timeStatus.textContent = `¡Faltan ${days} días, ${hours} horas, ${minutes} minutos y ${seconds} segundos!`;
+        }
+    }
 
         setInterval(updateCountdown, 1000);
         updateCountdown();
 
-        // Efecto de partículas en el botón
-        document.querySelector('.rsvp-button').addEventListener('click', function(e) {
-            const rect = this.getBoundingClientRect();
-            for(let i = 0; i < 20; i++) {
-                createParticle(rect.left + rect.width / 2, rect.top + rect.height / 2);
+        // Función para crear confeti
+        function createConfetti() {
+            const colors = ['#e74c3c', '#f1c40f', '#2ecc71', '#3498db'];
+            
+            for(let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.width = '10px';
+                confetti.style.height = '10px';
+                confetti.style.position = 'fixed';
+                confetti.style.top = '-10px';
+                document.body.appendChild(confetti);
+
+                const animation = confetti.animate([
+                    { transform: 'translate3d(0, 0, 0) rotate(0deg)', opacity: 1 },
+                    { transform: `translate3d(${Math.random() * 200 - 100}px, ${window.innerHeight}px, 0) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+                ], {
+                    duration: 3000,
+                    easing: 'cubic-bezier(0, .9, .57, 1)',
+                    delay: Math.random() * 2000
+                });
+
+                animation.onfinish = () => confetti.remove();
             }
-            alert('¡Gracias por confirmar tu asistencia! Te esperamos con mucha alegría.');
-        });
+        }
+
+        // Cerrar modal al hacer clic fuera
+        window.onclick = function(event) {
+            const modal = document.getElementById('confirmModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
     </script>
 </body>
 </html>
