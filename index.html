@@ -16,7 +16,6 @@
 
         body {
             font-family: 'Playfair Display', serif;
-            background: #f0f2f5;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -24,7 +23,41 @@
             perspective: 1000px;
             overflow: hidden;
             padding: 20px;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #1a1a2e);
+            position: relative;
         }
+
+        
+         /* nuevos Fondo animado */
+         .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        @keyframes bgPulse {
+            0% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .animated-bg::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, transparent 30%, #0f3460 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
 
         .envelope-wrapper {
             position: relative;
@@ -39,38 +72,60 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            background: #e74c3c;
+            background: linear-gradient(145deg, #B0855B, #B0855B);
             transform-origin: bottom;
             transform-style: preserve-3d;
             transition: transform 1s;
-            border-radius: 10px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.2);
         }
-
         .envelope-front {
             position: absolute;
             width: 100%;
             height: 100%;
-            background: #c0392b;
+            background: linear-gradient(145deg, #2c3e50, #3498db);
             transform: rotateX(0deg);
             transform-origin: top;
             transition: transform 1s;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            font-size: clamp(18px, 4vw, 24px);
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(24px, 5vw, 36px);
+            color: #B0855B;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
             text-align: center;
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 20px;
+            border: 3px solid #B0855B;
+            position: relative;
+            overflow: hidden;
         }
+
+
+        .envelope-front::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: shine 3s infinite;
+        }
+
+
 
         .envelope-front::before {
             content: "Click para abrir";
+            font-family: 'Playfair Display', serif;
             position: absolute;
             bottom: 20px;
             font-size: clamp(14px, 3vw, 16px);
             animation: pulse 2s infinite;
+            color: #E2DED0;
         }
 
         @keyframes pulse {
@@ -83,22 +138,34 @@
             transform: rotateX(180deg);
         }
 
+        .subtitle {
+            font-size: clamp(1em, 3vw, 1.5em);
+            color: #010030;
+            margin-top: 10px;
+        }
+
+        
         .invitation-card {
             position: absolute;
             width: 90%;
             height: 90%;
-            background: white;
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
             padding: clamp(20px, 5vw, 40px);
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             text-align: center;
             transform: translateZ(1px);
             opacity: 0;
             transition: all 1s;
             overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
             left: 5%;
             top: 5%;
+            border: 2px solid #B0855B;
+        }
+
+        .highlight {
+            color: #3498db;
+            font-style: italic;
         }
 
         .invitation-card.show {
@@ -110,7 +177,7 @@
             position: absolute;
             width: min(150px, 30%);
             height: min(150px, 30%);
-            border: 2px solid gold;
+            border: 2px solid #B0855B;
             opacity: 0.1;
             border-radius: 50%;
         }
@@ -125,25 +192,34 @@
             right: -75px;
         }
 
-        h1 {
+          h1 {
+            font-family: 'Cormorant Garamond', serif;
             color: #2c3e50;
-            font-size: clamp(1.5em, 5vw, 2.5em);
+            font-size: clamp(1.8em, 5vw, 2.8em);
             margin-bottom: 20px;
+            font-weight: 700;
+            letter-spacing: 1px;
         }
 
-        .highlight {
-            color: #e74c3c;
-            font-style: italic;
-        }
+        h1, .main-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+}
 
-        .date {
-            font-size: clamp(1.2em, 4vw, 1.5em);
-            color: #34495e;
+.subtitle, .date, .message {
+    font-family: 'Libre Baskerville', serif;
+}
+        
+
+.date {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.3em, 4vw, 1.6em);
+            color: #2c3e50;
             margin: 30px 0;
-            padding: 15px;
-            border-top: 2px solid #eee;
-            border-bottom: 2px solid #eee;
-            background: linear-gradient(45deg, transparent 5%, #f8f9fa 5%);
+            padding: 20px;
+            border-top: 2px solid #B0855B;
+            border-bottom: 2px solid #B0855B;
+            background: linear-gradient(45deg, transparent 5%, rgba(255,215,0,0.1) 5%);
         }
 
         .message {
@@ -155,20 +231,20 @@
 
         .countdown {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
             gap: clamp(10px, 2vw, 20px);
             margin: 30px 0;
-            padding: 0 clamp(10px, 2vw, 20px);
         }
 
         .countdown-item {
-            background: #2c3e50;
-            color: white;
-            padding: clamp(10px, 2vw, 15px);
-            border-radius: 10px;
+            background: linear-gradient(145deg, #2c3e50, #3498db);
+            color: #ffffff;
+            padding: clamp(15px, 3vw, 20px);
+            border-radius: 15px;
             text-align: center;
             transform: scale(1);
             transition: transform 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
         .countdown-item:hover {
@@ -177,8 +253,9 @@
 
         .countdown-item span {
             display: block;
-            font-size: clamp(1.2em, 4vw, 1.8em);
+            font-size: clamp(1.4em, 4vw, 2em);
             font-weight: bold;
+            font-family: 'Montserrat', sans-serif;
         }
 
         .countdown-item p {
@@ -187,23 +264,68 @@
         }
 
         .rsvp-button {
-            background: #e74c3c;
-            color: white;
+            background: linear-gradient(145deg, #2c3e50, #3498db);
+            color: #ffffff;
             border: none;
-            padding: clamp(10px, 3vw, 15px) clamp(20px, 5vw, 40px);
-            font-size: clamp(1em, 3vw, 1.2em);
+            padding: clamp(12px, 3vw, 18px) clamp(25px, 5vw, 45px);
+            font-size: clamp(1.1em, 3vw, 1.3em);
             border-radius: 30px;
             cursor: pointer;
             transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
             margin-top: 20px;
         }
 
         .rsvp-button:hover {
             transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
         }
+
+        .message {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(1.1em, 3vw, 1.3em);
+            line-height: 1.8;
+            color: #34495e;
+            margin-bottom: 30px;
+        }
+
+        
+        .location-container {
+            margin-top: 40px;
+            padding: 20px;
+            background: rgba(52, 152, 219, 0.1);
+            border-radius: 15px;
+        }
+
+        .location-container h3 {
+            font-family: 'Cormorant Garamond', serif;
+            color: #2c3e50;
+            font-size: clamp(1.3em, 4vw, 1.6em);
+            margin-bottom: 15px;
+        }
+
+        .location-details {
+            margin-top: 15px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .location-details p {
+            margin: 8px 0;
+            color: #34495e;
+        }
+
+        .location-details a {
+            color: #3498db;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .location-details a:hover {
+            color: #2c3e50;
+        }
+
 
         .confirmation-modal {
             position: fixed;
@@ -228,7 +350,7 @@
             position: fixed;
             width: 10px;
             height: 10px;
-            background: #e74c3c;
+            background: #081081;
             position: absolute;
             animation: confetti 5s ease-in-out infinite;
         }
@@ -273,20 +395,162 @@
         }
 
         .invitation-card::-webkit-scrollbar-thumb {
-            background: #e74c3c;
+            background: #222121;
             border-radius: 4px;
         }
 
         .invitation-card::-webkit-scrollbar-thumb:hover {
-            background: #c0392b;
+            background: #181818;
+        }
+
+        .map-container {
+            margin: 20px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 250px;
+            border: none;
+        }
+
+
+        /*audio*/
+        .audio-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(44, 62, 80, 0.9);
+            padding: 10px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .audio-controls:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .audio-btn {
+            background: none;
+            border: none;
+            color: #ffd700;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .audio-btn:hover {
+            background: rgba(255,255,255,0.1);
+            transform: scale(1.1);
+        }
+
+        .audio-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .volume-slider {
+            width: 80px;
+            height: 4px;
+            -webkit-appearance: none;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+            outline: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: #ffd700;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .volume-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        /* Indicador de audio */
+        .audio-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(44, 62, 80, 0.9);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .audio-indicator.show {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
 <body>
+
+    <!-- Controles de audio -->
+    <div class="audio-controls">
+        <button class="audio-btn" id="playPauseBtn" title="Reproducir/Pausar">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M8 5v14l11-7z"/>
+            </svg>
+        </button>
+        <input type="range" class="volume-slider" min="0" max="1" step="0.1" value="0.5">
+    </div>
+
+    <div class="audio-indicator" id="audioIndicator">
+        ♪ Música de fondo activada
+    </div>
+
+    <!-- Elemento de audio -->
+<audio id="bgMusic" loop>
+    <source src="https://cdn.pixabay.com/audio/2025/01/10/audio_67c49a0bfc.mp3">
+    Tu navegador no soporta el elemento de audio.
+</audio>
+
+    <div class="animated-bg"></div>
     <div class="envelope-wrapper">
         <div class="envelope">
+             <!-- Esquinas decorativas -->
+             <div class="corner corner-tl"></div>
+             <div class="corner corner-tr"></div>
+             <div class="corner corner-bl"></div>
+             <div class="corner corner-br"></div>
+             
+             <!-- Líneas decorativas -->
+             <div class="decoration-line line-horizontal line-top"></div>
+             <div class="decoration-line line-horizontal line-bottom"></div>
+             <div class="decoration-line line-vertical line-left"></div>
+             <div class="decoration-line line-vertical line-right"></div>
+ 
             <div class="envelope-front">
-                ¡Has recibido una invitación especial!
+                <div class="title-container">
+                    <h1 class="main-title">
+                        
+                    </h1>
+                    <div class="subtitle">!Has recibido una invitación especial de Adrian!</div>
+                </div>
             </div>
             <div class="invitation-card">
                 <div class="decoration"></div>
@@ -296,17 +560,19 @@
                 
                 <p class="message">
                     Después de 1 década, 2 eras de hielo, y antes de que se acabe el mundo...
-                    ¡Por fin me gradúo! Y quiero compartir este momento especial contigo.
+                    ¡Por fin llegué al final para defender mi tesis.! Y quiero compartir este momento especial contigo.
                 </p>
 
                 <div class="date">
                     Viernes 7 de marzo del 2025
-                    Lugar: <span class="highlight">Universidad ESPE</span>
+                    <p>Lugar: <span class="highlight">Universidad ESPE</span></p>
+                    <p>Edificio: <span class="highlight">Bloque: H Segundo piso - Salon: 2000</span></p>
+                    <p>Hora: <span class="highlight">3:45 PM</span></p>
                 </div>
 
                 <p class="message">
                     Se avisa con anticipación, para que puedas organizar tus actividades.
-                    ¡Te espero, no faltes!
+                    ¡Te espero en mi defensa, no faltes!
                 </p>
 
                 <div class="countdown">
@@ -328,6 +594,23 @@
                     </div>
                 </div>
 
+                 <!-- Add this after the date section -->
+    <div class="location-container">
+        <h3>Ubicación del Evento</h3>
+        <div class="map-container">
+            <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d997.8890242840591!2d-78.44556526738285!3d-0.3129644539531613!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMMKwMTgnNDYuNyJTIDc4wrAyNic0NC4wIlc!5e0!3m2!1ses!2sec!4v1625097200000!5m2!1ses!2sec"
+                allowfullscreen=""
+                loading="lazy">
+            </iframe>
+        </div>
+        <div class="location-details">
+            <p>📍 Universidad ESPE - Campus Sangolquí</p>
+            <p>🎓 Bloque H, Segundo piso - Salón 2000</p>
+            <p>🔗 <a href="https://maps.app.goo.gl/uad13yyVGLZDvyBG9" target="_blank">Ver en Google Maps</a></p>
+        </div>
+    </div>
+
                 <button class="rsvp-button">Confirmar Asistencia</button>
             </div>
         </div>
@@ -335,7 +618,7 @@
 
     <div class="confirmation-modal">
         <h2>¡Gracias por confirmar!</h2>
-        <p>Nos vemos en la celebración 🎓✨</p>
+        <p>Nos vemos en mi Defensa de Tesis 🎓✨</p>
     </div>
 
     <script>
@@ -418,6 +701,70 @@
 
         window.addEventListener('resize', adjustHeight);
         adjustHeight();
+
+        document.querySelectorAll('.main-title span').forEach((letter, index) => {
+            letter.style.opacity = '0';
+            letter.style.animation = `fadeInUp 0.5s ease forwards ${index * 0.1}s`;
+        });
+
+         // Funcionalidad de audio
+         const audio = document.getElementById('bgMusic');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const volumeSlider = document.querySelector('.volume-slider');
+        const audioIndicator = document.getElementById('audioIndicator');
+
+        let isPlaying = false;
+
+        // Función para actualizar el ícono del botón
+        function updatePlayButton() {
+            playPauseBtn.innerHTML = isPlaying ? 
+                '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>' : 
+                '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+        }
+
+        // Mostrar indicador de audio
+        function showAudioIndicator(message) {
+            audioIndicator.textContent = message;
+            audioIndicator.classList.add('show');
+            setTimeout(() => {
+                audioIndicator.classList.remove('show');
+            }, 2000);
+        }
+
+        // Event listener para el botón de play/pause
+        playPauseBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                audio.pause();
+                showAudioIndicator('♪ Música pausada');
+            } else {
+                audio.play().catch(e => {
+                    console.log('Error al reproducir audio:', e);
+                    showAudioIndicator('⚠️ Error al reproducir audio');
+                });
+                showAudioIndicator('♪ Música de fondo activada');
+            }
+            isPlaying = !isPlaying;
+            updatePlayButton();
+        });
+
+        // Control de volumen
+        volumeSlider.addEventListener('input', (e) => {
+            audio.volume = e.target.value;
+        });
+
+        // Inicializar volumen
+        audio.volume = volumeSlider.value;
+
+        // Reproducir audio cuando se abre el sobre
+        envelope.addEventListener('click', () => {
+            if (!isPlaying) {
+                audio.play().catch(e => console.log('Error al reproducir audio:', e));
+                isPlaying = true;
+                updatePlayButton();
+                showAudioIndicator('♪ Música de fondo activada');
+            }
+            // ... (resto del código del sobre) ...
+        });
     </script>
 </body>
 </html>
