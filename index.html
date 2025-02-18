@@ -505,6 +505,143 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* Aviso flotante */
+
+    .scroll-hint {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translate(-50%, 100px);
+    background: linear-gradient(135deg, rgba(44, 62, 80, 0.95), rgba(52, 152, 219, 0.95));
+    color: #ffffff;
+    padding: 15px 30px;
+    border-radius: 50px;
+    font-size: 16px;
+    font-family: 'Playfair Display', serif;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.25);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(8px);
+}
+
+.scroll-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.scroll-icon-wrapper {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.scroll-icon-circle {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    animation: pulseCircle 2s infinite ease-in-out;
+}
+
+.scroll-icon {
+    font-size: 20px;
+    color: #FFD700;
+    animation: floatArrow 2s infinite ease-in-out;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.scroll-text {
+    font-weight: 400;
+    letter-spacing: 0.8px;
+    font-size: 15px;
+    background: linear-gradient(120deg, #ffffff, #ffd700);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.scroll-hint.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, 0);
+    animation: appearWithBounce 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes appearWithBounce {
+    0% {
+        transform: translate(-50%, 100px);
+        opacity: 0;
+    }
+    50% {
+        transform: translate(-50%, -10px);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translate(-50%, 0);
+        opacity: 1;
+    }
+}
+
+@keyframes floatArrow {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(5px);
+    }
+}
+
+@keyframes pulseCircle {
+    0% {
+        transform: scale(1);
+        opacity: 0.3;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0.3;
+    }
+}
+
+/* Ajuste para dispositivos móviles */
+@media (max-width: 768px) {
+    .scroll-hint {
+        bottom: 100px;
+        padding: 12px 25px;
+    }
+    
+    .scroll-text {
+        font-size: 14px;
+    }
+    
+    .scroll-icon-wrapper {
+        width: 28px;
+        height: 28px;
+    }
+}
+
+/* Efecto de desvanecimiento al ocultar */
+.scroll-hint.hide {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+    transition: all 0.5s ease-out;
+}
+
+
     </style>
 </head>
 <body>
@@ -620,6 +757,18 @@
         <h2>¡Gracias por confirmar!</h2>
         <p>Nos vemos en mi Defensa de Tesis 🎓✨</p>
     </div>
+
+    <!-- Actualiza el HTML del aviso flotante -->
+<div id="scrollHint" class="scroll-hint">
+    <div class="scroll-content">
+        <div class="scroll-icon-wrapper">
+            <span class="scroll-icon-circle"></span>
+            <span class="scroll-icon">↓</span>
+        </div>
+        <span class="scroll-text">Deslice hacia abajo para ver más</span>
+    </div>
+</div>
+
 
     <script>
         // Animación del sobre
@@ -765,6 +914,46 @@
             }
             // ... (resto del código del sobre) ...
         });
+
+
+        // Aviso flotante
+
+        document.addEventListener("DOMContentLoaded", function() {
+    const envelope = document.querySelector('.envelope');
+    const card = document.querySelector('.invitation-card');
+    const scrollHint = document.getElementById('scrollHint');
+    let isOpen = false;
+
+    function showScrollHint() {
+        // Espera a que la animación de la tarjeta termine
+        setTimeout(() => {
+            scrollHint.classList.add("show");
+            
+            // Elimina el mensaje después de 5 segundos con animación de salida
+            setTimeout(() => {
+                scrollHint.classList.add("hide");
+                setTimeout(() => {
+                    scrollHint.classList.remove("show");
+                    scrollHint.classList.remove("hide");
+                }, 400);
+            }, 4000);
+        }, 1000);
+    }
+
+    envelope.addEventListener('click', () => {
+        if (!isOpen) {
+            envelope.classList.add('open');
+            setTimeout(() => {
+                card.classList.add('show');
+                showScrollHint();
+            }, 500);
+            isOpen = true;
+        }
+    });
+});
     </script>
+
+
+
 </body>
 </html>
