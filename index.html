@@ -712,8 +712,8 @@
                 <div class="date">
                     Viernes 7 de marzo del 2025
                     <p>Lugar: <span class="highlight">Universidad ESPE</span></p>
-                    <p>Edificio: <span class="highlight">Bloque: H Segundo piso - Salon: 2000</span></p>
-                    <p>Hora: <span class="highlight">3:40 PM</span></p>
+                    <p>Edificio: <span class="highlight">Bloque D, Segundo piso - Auditorio1 - Laboratorio Interactivo DCCO</span></p>
+                    <p>Hora: <span class="highlight">3:35 PM</span></p>
                 </div>
 
                 <p class="message">
@@ -752,7 +752,8 @@
         </div>
         <div class="location-details">
             <p>📍 Universidad ESPE - Campus Sangolquí</p>
-            <p>🎓 Bloque H, Segundo piso - Salón 2000</p>
+            
+            <p>🎓 Bloque D, Segundo piso - Auditorio1 - Laboratorio Interactivo DCCO</p>
             <p>🔗 <a href="https://maps.app.goo.gl/uad13yyVGLZDvyBG9" target="_blank">Ver en Google Maps</a></p>
         </div>
     </div>
@@ -795,35 +796,36 @@
             }
         });
 
-        // Contador regresivo actualizado para Ecuador (UTC-5)
-        const eventDate = new Date('2025-03-07T00:00:00-05:00').getTime();
+       // Contador regresivo actualizado para Ecuador (UTC-5)
+const eventDate = new Date('2025-03-07T16:00:00-05:00').getTime();
 
-        function updateCountdown() {
-            const now = new Date().getTime();
-            const timeZoneOffset = -5 * 60 * 60 * 1000; // UTC-5 en milisegundos
-            const distance = eventDate - now;
+function updateCountdown() {
+    const now = new Date().getTime();
+    const distance = eventDate - now;
 
-            const days = Math.max(Math.floor(distance / (1000 * 60 * 60 * 24)), 0);
-            const hours = Math.max(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)), 0);
-            const minutes = Math.max(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)), 0);
-            const seconds = Math.max(Math.floor((distance % (1000 * 60)) / 1000), 0);
+    const days = Math.max(Math.floor(distance / (1000 * 60 * 60 * 24)), 0);
+    const hours = Math.max(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)), 0);
+    const minutes = Math.max(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)), 0);
+    const seconds = Math.max(Math.floor((distance % (1000 * 60)) / 1000), 0);
 
-            document.getElementById("days").textContent = String(days).padStart(2, '0');
-            document.getElementById("hours").textContent = String(hours).padStart(2, '0');
-            document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
-            document.getElementById("seconds").textContent = String(seconds).padStart(2, '0');
+    document.getElementById("days").textContent = String(days).padStart(2, '0');
+    document.getElementById("hours").textContent = String(hours).padStart(2, '0');
+    document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
+    document.getElementById("seconds").textContent = String(seconds).padStart(2, '0');
 
-            if (distance < 0) {
-                clearInterval(countdownInterval);
-                document.getElementById("days").textContent = '00';
-                document.getElementById("hours").textContent = '00';
-                document.getElementById("minutes").textContent = '00';
-                document.getElementById("seconds").textContent = '00';
-            }
-        }
+    if (distance < 0) {
+        clearInterval(countdownInterval);
+        document.getElementById("days").textContent = '00';
+        document.getElementById("hours").textContent = '00';
+        document.getElementById("minutes").textContent = '00';
+        document.getElementById("seconds").textContent = '00';
+    }
+}
 
-        const countdownInterval = setInterval(updateCountdown, 1000);
-        updateCountdown();
+// Actualizar cada segundo
+const countdownInterval = setInterval(updateCountdown, 1000);
+updateCountdown();
+
 
         // Confirmación y efectos
         const rsvpButton = document.querySelector('.rsvp-button');
